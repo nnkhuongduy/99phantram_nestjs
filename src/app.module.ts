@@ -5,7 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { _99AppModule } from './modules/app/app.module';
+import { ClientModule } from './modules/client/client.module';
 import { DatabaseModule } from './modules/database/database.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { DatabaseModule } from './modules/database/database.module';
     }),
     DatabaseModule,
     _99AppModule,
+    ClientModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

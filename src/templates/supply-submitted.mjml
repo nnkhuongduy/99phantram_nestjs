@@ -1,0 +1,12 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          <h1>99Phantram</h1>
+          <p>Bài đăng về sản phẩm <b>{{ supply_name }}</b> đã được 99PhầnTrăm tiếp nhận! 99PhầnTrăm sẽ kiểm duyệt và phản hồi cho bạn sớm nhất có thể từ 2 - 12 tiếng</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

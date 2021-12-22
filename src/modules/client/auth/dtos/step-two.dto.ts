@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsString, Length } from 'class-validator';
 
-export class StepTwoUpdateBody {
+export class StepTwoUpdateDto {
   @IsNotEmpty()
   @IsString()
   @Length(10, 13)

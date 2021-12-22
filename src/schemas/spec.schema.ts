@@ -5,7 +5,7 @@ export type SpecDocument = Spec & mongoose.Document;
 
 @Schema()
 export class Spec {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   name: string;
 
   @Prop({ default: '' })

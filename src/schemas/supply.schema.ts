@@ -2,10 +2,10 @@ import * as mongoose from 'mongoose';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 
 import { User } from './user.schema';
-import { ServiceDocument } from './service.schema';
-import { Spec } from './spec.schema';
-import { CategoryDocument } from './category.schema';
-import { LocationDocument } from './location.schema';
+import { Service, ServiceDocument, ServiceSchema } from './service.schema';
+import { Spec, SpecSchema } from './spec.schema';
+import { Category, CategoryDocument, CategorySchema } from './category.schema';
+import { Location, LocationDocument, LocationSchema } from './location.schema';
 
 export enum SupplyStatus {
   WAITING,
@@ -22,7 +22,11 @@ export enum ProductStatus {
   Under80,
 }
 
-export type SupplyDocument = Supply & mongoose.Document;
+export type SupplyDocument = Supply &
+  mongoose.Document & {
+    createdAt: string;
+    updatedAt: string;
+  };
 
 @Schema({ timestamps: true })
 export class Supply {
@@ -51,14 +55,14 @@ export class Supply {
   description: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [ServiceSchema],
     ref: 'Service',
     default: [],
   })
   services: ServiceDocument[];
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [SpecSchema],
     ref: 'Spec',
     default: [],
   })
@@ -71,14 +75,14 @@ export class Supply {
   thumbnail: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [CategorySchema],
     ref: 'Category',
     required: true,
   })
   categories: CategoryDocument[];
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [LocationSchema],
     ref: 'Location',
     required: true,
   })
@@ -91,13 +95,11 @@ export class Supply {
   reason: string;
 
   @Prop({
-    enum: Object.keys(ProductStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   productStatus: ProductStatus;
 
   @Prop({
-    enum: Object.keys(SupplyStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: SupplyStatus;

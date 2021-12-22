@@ -1,13 +1,17 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
-export class AppJwtStrategy extends PassportStrategy(Strategy, 'jwtEmployee') {
+export class UserInfoStrategy extends PassportStrategy(Strategy, 'userInfo') {
   constructor(
     configService: ConfigService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -19,7 +23,7 @@ export class AppJwtStrategy extends PassportStrategy(Strategy, 'jwtEmployee') {
     });
   }
 
-  async validate(payload: any): Promise<UserDocument> {
+  async validate(payload: any): Promise<User> {
     const user = await this.userModel.findById(payload.id).select('-password');
 
     if (!user)
@@ -29,6 +33,19 @@ export class AppJwtStrategy extends PassportStrategy(Strategy, 'jwtEmployee') {
         message: 'Không tìm thấy người dùng',
       });
 
-    return user;
+    if (
+      !user.phoneNumber ||
+      !user.address.length ||
+      !user.locationProvince ||
+      !user.locationBlock ||
+      !user.locationWard
+    )
+      throw new ForbiddenException({
+        success: false,
+        code: 403,
+        message: 'Tài khoản cần cập nhật thông tin',
+      });
+
+    return { ...user.toJSON(), id: user._id, password: undefined } as User;
   }
 }

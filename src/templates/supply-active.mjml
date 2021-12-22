@@ -1,0 +1,13 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          <h1>99Phantram</h1>
+          <h2>Xin chúc mừng!</h2>
+          <p>Bài đăng về sản phẩm <b>{{ supply_name }}</b> đã được 99PhầnTrăm kiểm duyệt thành công! Bạn đã có thể kiểm tra thông tin bài đăng hoặc đăng ký dịch vụ cho sản phẩm của mình!</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

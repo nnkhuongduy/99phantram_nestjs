@@ -1,13 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Role, RoleDocument } from 'src/schemas/role.schema';
-import { User, UserDocument, UserStatus } from 'src/schemas/user.schema';
+import {
+  Gender,
+  User,
+  UserDocument,
+  UserStatus,
+} from 'src/schemas/user.schema';
 import { AuthService } from '../auth/auth.service';
+import { RegistrationDto } from '../client/auth/dtos/registration.dto';
+import { StepTwoUpdateDto } from '../client/auth/dtos/step-two.dto';
+import { MailService } from '../mail/mail.service';
 import { PostUserBodyDto } from './dto/post-user-body';
 import { PutUserBodyDto } from './dto/put-user-body';
-import { StepTwoUpdateBody } from './dto/step-two-body';
 
 @Injectable()
 export class UserService {
@@ -15,6 +26,7 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Role.name) private roleModel: Model<RoleDocument>,
     private authService: AuthService,
+    private mailService: MailService,
   ) {}
 
   async getUser(id: string): Promise<UserDocument> {
@@ -92,7 +104,7 @@ export class UserService {
 
   async stepTwoUpdate(
     user: UserDocument,
-    body: StepTwoUpdateBody,
+    body: StepTwoUpdateDto,
   ): Promise<UserDocument> {
     user.phoneNumber = body.phoneNumber;
     user.locationBlock = body.block;
@@ -102,5 +114,55 @@ export class UserService {
     await user.save();
 
     return user;
+  }
+
+  async register(body: RegistrationDto) {
+    const role = await this.roleModel.findOne({ name: 'Buyer' });
+
+    const existedUser = await this.userModel.exists({ email: body.email });
+
+    if (existedUser)
+      throw new BadRequestException({
+        success: false,
+        code: 400,
+        message: 'Tài khoản này đã tồn tại!',
+      });
+
+    const password = await this.authService.encryptPassword(body.password);
+
+    const user = await this.userModel.create({
+      email: body.email,
+      password,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      sex: Gender.OTHER,
+      role,
+    });
+
+    await this.mailService.sendRegistrationVerification(user);
+
+    return user;
+  }
+
+  async verification(id: string) {
+    const user = await this.userModel.findById(id);
+
+    if (!user)
+      throw new NotFoundException({
+        success: false,
+        code: 404,
+        message: 'Không tìm thấy tài khoản này!',
+      });
+
+    if (user.status !== UserStatus.CREATED)
+      throw new BadRequestException({
+        success: false,
+        code: 404,
+        message: 'Tài khoản này đã được kích hoạt!',
+      });
+
+    user.status = UserStatus.VERIFIED;
+
+    await user.save();
   }
 }

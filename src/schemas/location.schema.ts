@@ -21,13 +21,11 @@ export class Location {
   name: string;
 
   @Prop({
-    enum: Object.keys(LocationLevel).filter((key) => typeof key === 'number'),
     default: 0,
   })
   locationLevel: LocationLevel;
 
   @Prop({
-    enum: Object.keys(LocationStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: LocationStatus;

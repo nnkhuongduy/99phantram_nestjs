@@ -2,9 +2,10 @@ import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { User } from './user.schema';
-import { ChatMessage } from './chat-message.schema';
+import { ChatMessage, ChatMessageSchema } from './chat-message.schema';
 
-export type ChatDocument = Chat & mongoose.Document;
+export type ChatDocument = Chat &
+  mongoose.Document & { createdAt: string; updatedAt: string };
 
 @Schema({ timestamps: true })
 export class Chat {
@@ -13,17 +14,17 @@ export class Chat {
     required: true,
     ref: 'User',
   })
-  user1: User;
+  user1: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
   })
-  user2: User;
+  user2: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [ChatMessageSchema],
     default: [],
     ref: 'ChatMessage',
   })

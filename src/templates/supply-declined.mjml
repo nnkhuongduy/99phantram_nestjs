@@ -1,0 +1,12 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          <h1>99Phantram</h1>
+          <p>99PhầnTrăm rất tiếc thông báo cho bạn bài đăng về sản phẩm <b>{{ supply_name }}</b> đã bị từ chối kiểm duyệt với lý do <b>{{ reject_reason }}</b>! Bạn có thể kiểm tra lại thông tin bài đăng của mình và đảm bảo các thông tin đã cung cấp là chính xác và phù hợp với tiêu chuẩn của 99PhầnTrăm!</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

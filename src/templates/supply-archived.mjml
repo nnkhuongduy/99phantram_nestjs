@@ -1,0 +1,12 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          <h1>99Phantram</h1>
+          <p>99PhầnTrăm rất tiếc phải thông báo rằng bài đăng về sản phẩm <b>{{ supply_name }}</b> của bạn đã bị xóa khỏi 99PhầnTrăm với lý do <b>{{ archive_reason }}</b></p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

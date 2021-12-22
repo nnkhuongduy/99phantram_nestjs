@@ -4,10 +4,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
-import { AppJwtAuthGuard } from './guards/jwt.guard';
-import { AppLocalAuthGuard } from './guards/local.guard';
-import { AppJwtStrategy } from './strategies/jwt.strategy';
-import { AppLocalStrategy } from './strategies/local.strategy';
+import { AppJwtAuthGuard } from './guards/app-jwt.guard';
+import { ClientJwtAuthGuard } from './guards/client-jwt.guard';
+import { AppLocalAuthGuard } from './guards/app-local.guard';
+import { AppJwtStrategy } from './strategies/app-jwt.strategy';
+import { ClientJwtStrategy } from './strategies/client-jwt.strategy';
+import { AppLocalStrategy } from './strategies/app-local.strategy';
+import { ClientLocalStrategy } from './strategies/client-local.strategy';
+import { UserInfoStrategy } from './strategies/user-info.strategy';
+import { UserInfoGuard } from './guards/user-info.guard';
 
 @Module({
   imports: [
@@ -26,6 +31,11 @@ import { AppLocalStrategy } from './strategies/local.strategy';
     AppJwtStrategy,
     AppLocalAuthGuard,
     AppJwtAuthGuard,
+    ClientJwtAuthGuard,
+    ClientLocalStrategy,
+    ClientJwtStrategy,
+    UserInfoStrategy,
+    UserInfoGuard,
   ],
   exports: [AuthService],
 })

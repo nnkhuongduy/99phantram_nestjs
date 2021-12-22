@@ -17,9 +17,6 @@ export class ServiceType {
   name: string;
 
   @Prop({
-    enum: Object.keys(ServiceTypeStatus).filter(
-      (key) => typeof key === 'number',
-    ),
     default: 0,
   })
   status: ServiceTypeStatus;

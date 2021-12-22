@@ -16,7 +16,8 @@ export enum UserStatus {
   ARCHIVED,
 }
 
-export type UserDocument = User & mongoose.Document;
+export type UserDocument = User &
+  mongoose.Document & { createdAt: string; updatedAt: string };
 
 @Schema({ timestamps: true })
 export class User {
@@ -33,7 +34,6 @@ export class User {
   lastName: string;
 
   @Prop({
-    enum: Object.keys(Gender).filter((key) => typeof key === 'number'),
     default: 0,
   })
   sex: Gender;
@@ -69,7 +69,6 @@ export class User {
   role: Role;
 
   @Prop({
-    enum: Object.keys(UserStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: UserStatus;

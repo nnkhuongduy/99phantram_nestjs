@@ -43,7 +43,6 @@ export class Order {
   amount: number;
 
   @Prop({
-    enum: Object.keys(OrderStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: OrderStatus;

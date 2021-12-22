@@ -41,7 +41,6 @@ export class ChatMessage {
   ratingId: string;
 
   @Prop({
-    enum: Object.keys(ChatMessageType).filter((key) => typeof key === 'number'),
     default: 0,
   })
   messageType: ChatMessageType;

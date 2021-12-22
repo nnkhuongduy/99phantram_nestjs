@@ -7,7 +7,8 @@ export enum RoleLevel {
   ALL,
 }
 
-export type RoleDocument = Role & mongoose.Document;
+export type RoleDocument = Role &
+  mongoose.Document & { createdAt: string; updatedAt: string };
 
 @Schema({ timestamps: true })
 export class Role {
@@ -15,7 +16,6 @@ export class Role {
   name: string;
 
   @Prop({
-    enum: Object.keys(RoleLevel).filter((key) => typeof key === 'number'),
     default: 0,
   })
   roleLevel: RoleLevel;

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AppJwtAuthGuard } from 'src/modules/auth/guards/jwt.guard';
+import { AppJwtAuthGuard } from 'src/modules/auth/guards/app-jwt.guard';
 
 import { CategoryService } from 'src/modules/category/category.service';
 import { PostCategoryBodyDto } from 'src/modules/category/dto/post-category-body';
@@ -24,22 +24,33 @@ export class AppCategoryController {
     private categoryService: CategoryService,
   ) {}
 
+  private _mapping(category: CategoryDocument) {
+    return {
+      ...category.toJSON(),
+      id: category._id,
+      specs: category.specs.map((spec: any) => ({
+        ...spec.toJSON(),
+        id: spec._id,
+      })),
+    };
+  }
+
   @Get()
   @UseGuards(AppJwtAuthGuard)
   async getAllCategories() {
-    return await this.categoryModel.find();
+    return (await this.categoryModel.find()).map((_) => this._mapping(_));
   }
 
   @Get(':id')
   @UseGuards(AppJwtAuthGuard)
   async getCategory(@Param('id') id: string) {
-    return await this.categoryService.getCategory(id);
+    return this._mapping(await this.categoryService.getCategory(id));
   }
 
   @Post()
   @UseGuards(AppJwtAuthGuard)
   async createCategory(@Body() body: PostCategoryBodyDto) {
-    return await this.categoryService.createCategory(body);
+    return this._mapping(await this.categoryService.createCategory(body));
   }
 
   @Put(':id')

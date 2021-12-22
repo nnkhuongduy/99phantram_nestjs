@@ -53,9 +53,52 @@ export class AuthService {
     return user;
   }
 
+  async validateUser(email: string, password: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({
+      email: email.trim().toLowerCase(),
+    });
+
+    if (!user)
+      throw new UnauthorizedException({
+        success: false,
+        code: 401,
+        message: 'Không tìm thấy người dùng!',
+      });
+
+    if (user.status == UserStatus.CREATED)
+      throw new UnauthorizedException({
+        success: false,
+        code: 401,
+        message: 'Tài khoản chưa được xác thực! Vui lòng xác thực qua email.',
+      });
+
+    if (user.status == UserStatus.ARCHIVED)
+      throw new UnauthorizedException({
+        success: false,
+        code: 401,
+        message: 'Tài khoản đã bị khóa hoặc xóa!',
+      });
+
+    if (user.role.roleLevel == RoleLevel.APP)
+      throw new UnauthorizedException({
+        success: false,
+        code: 401,
+        message: 'Tài khoản không có quyền truy cập tài nguyên này!',
+      });
+
+    if (!(await compare(password, user.password)))
+      throw new UnauthorizedException({
+        success: false,
+        code: 401,
+        message: 'Mật khẩu không đúng!',
+      });
+
+    return user;
+  }
+
   async login(user: UserDocument, remember = false) {
     const payload = { email: user.email, id: user._id };
-    const identifier = { ...user.toJSON(), password: undefined };
+    const identifier = { ...user, password: undefined, id: user._id };
 
     return {
       identifier,

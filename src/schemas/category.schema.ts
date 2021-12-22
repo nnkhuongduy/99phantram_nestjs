@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Spec } from './spec.schema';
+import { Spec, SpecSchema } from './spec.schema';
 
 export enum CategoryLevel {
   PRIMARY,
@@ -24,19 +24,17 @@ export class Category {
   image: string;
 
   @Prop({
-    enum: Object.keys(CategoryLevel).filter((key) => typeof key === 'number'),
     default: 0,
   })
   categoryLevel: CategoryLevel;
 
   @Prop({
-    enum: Object.keys(CategoryStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: CategoryStatus;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [SpecSchema],
     default: [],
     ref: 'Spec',
   })

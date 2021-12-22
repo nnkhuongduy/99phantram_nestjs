@@ -52,7 +52,6 @@ export class Rating {
   comment: string;
 
   @Prop({
-    enum: Object.keys(RatingStatus).filter((key) => typeof key === 'number'),
     default: 0,
   })
   status: RatingStatus;
